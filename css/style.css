@@ -1,0 +1,236 @@
+:root {
+    --primary: #00ff88;
+    --bg-dark: #0a0a14;
+    --bg-card: #141423;
+    --text-main: #ffffff;
+    --accent: #ffdd00;
+    --danger: #ff4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    padding: 2rem;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Splash Screen */
+#screen-splash .logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 8rem;
+    line-height: 0.8;
+    text-align: center;
+    background: linear-gradient(180deg, #fff 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.4));
+}
+
+#screen-splash span {
+    font-size: 5rem;
+}
+
+.tagline {
+    letter-spacing: 0.5rem;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+}
+
+/* Selection Screen */
+.grid-selection {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 2rem 0;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.team-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.team-card:hover, .team-card.selected {
+    background: var(--primary);
+    color: var(--bg-dark);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--primary);
+}
+
+/* Difficulty Options */
+.difficulty-select {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.diff-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn-diff {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-diff.active {
+    background: var(--primary);
+    color: var(--bg-dark);
+}
+
+/* Game Interface */
+.game-hud {
+    position: absolute;
+    top: 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.score-container {
+    background: rgba(20, 20, 35, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.team-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.score {
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: 'Bebas Neue', cursive;
+}
+
+.match-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vs {
+    font-size: 0.8rem;
+    opacity: 0.5;
+}
+
+#match-phase {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* Field & Canvas */
+#canvas-container {
+    background-color: #0d2a1a;
+    width: 400px;
+    height: 700px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 10%;
+}
+
+/* Overlays */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1004%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+#overlay-text {
+    font-size: 8rem;
+    font-family: 'Bebas Neue', cursive;
+    color: var(--primary);
+    animation: zoomPulse 0.5s infinite alternate;
+}
+
+/* Components */
+.btn-primary {
+    background: var(--primary);
+    border: none;
+    color: var(--bg-dark);
+    padding: 1.2rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #00cc6a;
+    transition: all 0.2s;
+}
+
+.btn-primary:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 transparent;
+}
+
+@keyframes zoomPulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}

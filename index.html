@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disco Brasileirão 2026</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Splash Screen -->
+        <section id="screen-splash" class="screen active">
+            <h1 class="logo">DISCO<br><span>BRASILEIRÃO</span></h1>
+            <p class="tagline">TEMPORADA 2026</p>
+            <button class="btn-primary" onclick="gameUI.showSelection()">INICIAR TORNEIO</button>
+        </section>
+
+        <!-- Selection Screen -->
+        <section id="screen-selection" class="screen">
+            <h2>ESCOLHA SEU TIME</h2>
+            <div id="team-grid" class="grid-selection"></div>
+            
+            <div class="difficulty-select">
+                <h3>DIFICULDADE</h3>
+                <div class="diff-options">
+                    <button class="btn-diff active" data-diff="easy">FÁCIL</button>
+                    <button class="btn-diff" data-diff="medium">MÉDIO</button>
+                    <button class="btn-diff" data-diff="hard">DIFÍCIL</button>
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="gameUI.startTournament()">CONFIRMAR</button>
+        </section>
+
+        <!-- Game Screen -->
+        <section id="screen-game" class="screen">
+            <div class="game-hud">
+                <div class="score-container">
+                    <div id="player-info" class="team-info">
+                        <span class="team-name">TIMÃO</span>
+                        <span id="player-score" class="score">0</span>
+                    </div>
+                    <div class="match-info">
+                        <span id="match-phase">OITAVAS</span>
+                        <span class="vs">VS</span>
+                    </div>
+                    <div id="ai-info" class="team-info">
+                        <span id="ai-score" class="score">0</span>
+                        <span class="ai-name">IA</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="canvas-container">
+                <canvas id="game-canvas"></canvas>
+            </div>
+        </section>
+
+        <!-- Result/Goal Overlay -->
+        <div id="overlay" class="overlay">
+            <h2 id="overlay-text">GOL!</h2>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
