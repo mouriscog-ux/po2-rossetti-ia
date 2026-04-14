@@ -17,8 +17,8 @@ const gameEngine = {
         this.canvas.height = CONFIG.CANVAS.HEIGHT;
 
         this.puck = new Puck(this.canvas.width / 2, this.canvas.height / 2);
-        this.player = new Mallet(150, this.canvas.height / 2, gameUI.selectedTeam.color);
-        this.ai = new Mallet(this.canvas.width - 150, this.canvas.height / 2, gameUI.aiTeam.color);
+        this.player = new Mallet(150, this.canvas.height / 2, gameUI.selectedTeam.primary, gameUI.selectedTeam.secondary);
+        this.ai = new Mallet(this.canvas.width - 150, this.canvas.height / 2, gameUI.aiTeam.primary, gameUI.aiTeam.secondary);
 
         this.playerScore = 0;
         this.aiScore = 0;

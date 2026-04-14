@@ -30,8 +30,9 @@ const AI = {
         const dy = targetY - aiMallet.y;
         
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > 0) {
-            const speed = config.speed;
+        const speed = config.speed;
+
+        if (dist > speed) {
             const moveX = (dx / dist) * speed;
             const moveY = (dy / dist) * speed;
             
@@ -40,6 +41,12 @@ const AI = {
             
             aiMallet.x += moveX;
             aiMallet.y += moveY;
+        } else {
+            // Arrived at target or very close
+            aiMallet.x = targetX;
+            aiMallet.y = targetY;
+            aiMallet.vx = 0;
+            aiMallet.vy = 0;
         }
 
         Physics.clampMallet(aiMallet, width, height, false);

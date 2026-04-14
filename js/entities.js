@@ -16,12 +16,9 @@ class Puck {
     update() {
         this.x += this.vx;
         this.y += this.vy;
-
-        // v3.0 Damping (0.98 multiplier)
         this.vx *= CONFIG.PHYSICS.DAMPING;
         this.vy *= CONFIG.PHYSICS.DAMPING;
 
-        // v3.0 Max Speed (12px/frame)
         const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
         if (speed > CONFIG.PHYSICS.MAX_SPEED) {
             const ratio = CONFIG.PHYSICS.MAX_SPEED / speed;
@@ -43,23 +40,38 @@ class Puck {
 }
 
 class Mallet {
-    constructor(x, y, color) {
+    constructor(x, y, primary, secondary) {
         this.x = x;
         this.y = y;
         this.vx = 0;
         this.vy = 0;
-        this.color = color;
+        this.primary = primary;
+        this.secondary = secondary;
         this.radius = CONFIG.PHYSICS.MALLET_RADIUS;
     }
 
     draw(ctx) {
+        // Outline shadow
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "rgba(0,0,0,0.5)";
+
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 4;
+        ctx.fillStyle = this.primary;
+        ctx.strokeStyle = this.secondary;
+        ctx.lineWidth = 6;
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
+        
+        // Inner circle
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius * 0.4, 0, Math.PI * 2);
+        ctx.strokeStyle = this.secondary;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.shadowBlur = 0;
     }
 }

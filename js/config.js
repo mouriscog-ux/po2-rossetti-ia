@@ -4,36 +4,36 @@ const CONFIG = {
         HEIGHT: 750
     },
     CLUBS: [
-        { name: "Palmeiras", color: "#006437" },
-        { name: "Flamengo", color: "#c8102e" },
-        { name: "São Paulo", color: "#fe0000" },
-        { name: "Fluminense", color: "#800020" },
-        { name: "Bahia", color: "#005696" },
-        { name: "Athletico-PR", color: "#000000" },
-        { name: "Coritiba", color: "#006437" },
-        { name: "Atlético-MG", color: "#000000" },
-        { name: "Bragantino", color: "#ffffff" },
-        { name: "Vitória", color: "#ff0000" },
-        { name: "Botafogo", color: "#000000" },
-        { name: "Grêmio", color: "#00a1e0" },
-        { name: "Vasco", color: "#000000" },
-        { name: "Internacional", color: "#ff0000" },
-        { name: "Santos", color: "#ffffff" },
-        { name: "Corinthians", color: "#000000" },
-        { name: "Cruzeiro", color: "#0033a0" },
-        { name: "Remo", color: "#001b44" },
-        { name: "Chapecoense", color: "#00913d" },
-        { name: "Mirassol", color: "#ffdd00" }
+        { name: "Palmeiras", primary: "#006437", secondary: "#FFFFFF" },
+        { name: "Flamengo", primary: "#c8102e", secondary: "#000000" },
+        { name: "São Paulo", primary: "#fe0000", secondary: "#FFFFFF" },
+        { name: "Fluminense", primary: "#800020", secondary: "#00913d" },
+        { name: "Bahia", primary: "#005696", secondary: "#c8102e" },
+        { name: "Athletico-PR", primary: "#c8102e", secondary: "#000000" },
+        { name: "Coritiba", primary: "#006437", secondary: "#FFFFFF" },
+        { name: "Atlético-MG", primary: "#000000", secondary: "#FFFFFF" },
+        { name: "Bragantino", primary: "#FFFFFF", secondary: "#c8102e" },
+        { name: "Vitória", primary: "#c8102e", secondary: "#000000" },
+        { name: "Botafogo", primary: "#000000", secondary: "#FFFFFF" },
+        { name: "Grêmio", primary: "#00a1e0", secondary: "#000000" },
+        { name: "Vasco", primary: "#000000", secondary: "#FFFFFF" },
+        { name: "Internacional", primary: "#ff0000", secondary: "#ffffff" },
+        { name: "Santos", primary: "#ffffff", secondary: "#000000" },
+        { name: "Corinthians", primary: "#ffffff", secondary: "#000000" },
+        { name: "Cruzeiro", primary: "#0033a0", secondary: "#FFFFFF" },
+        { name: "Remo", primary: "#001b44", secondary: "#FFFFFF" },
+        { name: "Chapecoense", primary: "#00913d", secondary: "#FFFFFF" },
+        { name: "Mirassol", primary: "#ffdd00", secondary: "#00913d" }
     ],
     DIFFICULTIES: {
-        easy: { speed: 2, reaction: 0.1, aggressive: false },
-        medium: { speed: 4, reaction: 0.5, aggressive: true },
-        hard: { speed: 6, reaction: 1.0, aggressive: true, prediction: true }
+        easy: { speed: 4, reaction: 0.1, aggressive: false },
+        medium: { speed: 10, reaction: 0.5, aggressive: true },
+        hard: { speed: 14, reaction: 1.0, aggressive: true, prediction: true }
     },
     PHYSICS: {
-        DAMPING: 0.99, // Less friction for faster puck
-        RESTITUTION: 0.8, // More punchy impact
-        MAX_SPEED: 15, // Adjusted from 1,5 to 15 for 'normal' speed
+        DAMPING: 0.99,
+        RESTITUTION: 0.8,
+        MAX_SPEED: 15,
         PUCK_RADIUS: 25,
         MALLET_RADIUS: 45,
         GOAL_HEIGHT: 250,
