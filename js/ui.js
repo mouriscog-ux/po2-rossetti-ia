@@ -1,5 +1,6 @@
 const gameUI = {
     selectedTeam: null,
+    aiTeam: null,
     difficulty: 'medium',
     currentPhaseIndex: 0,
     
@@ -10,11 +11,12 @@ const gameUI = {
 
     populateTeams() {
         const grid = document.getElementById('team-grid');
-        CONFIG.CLUBS.forEach((teamName, index) => {
+        grid.innerHTML = '';
+        CONFIG.CLUBS.forEach((club, index) => {
             const card = document.createElement('div');
             card.className = 'team-card';
-            card.innerHTML = `<strong>${(index + 1).toString().padStart(2, '0')}</strong><br>${teamName}`;
-            card.onclick = () => this.selectTeam(teamName, card);
+            card.innerHTML = `<strong>${(index + 1).toString().padStart(2, '0')}</strong><br>${club.name}`;
+            card.onclick = () => this.selectTeam(club, card);
             grid.appendChild(card);
         });
     },
@@ -29,8 +31,8 @@ const gameUI = {
         });
     },
 
-    selectTeam(teamName, element) {
-        this.selectedTeam = teamName;
+    selectTeam(club, element) {
+        this.selectedTeam = club;
         document.querySelectorAll('.team-card').forEach(c => c.classList.remove('selected'));
         element.classList.add('selected');
     },
@@ -44,6 +46,11 @@ const gameUI = {
             alert("Escolha um time primeiro!");
             return;
         }
+        
+        // Pick random AI team different from player
+        let availableClubs = CONFIG.CLUBS.filter(c => c.name !== this.selectedTeam.name);
+        this.aiTeam = availableClubs[Math.floor(Math.random() * availableClubs.length)];
+        
         this.currentPhaseIndex = 0;
         this.switchScreen('screen-game');
         gameEngine.startMatch();

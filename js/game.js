@@ -7,7 +7,8 @@ const gameEngine = {
     playerScore: 0,
     aiScore: 0,
     keys: {},
-    playerSpeed: 7,
+    playerSpeed: 6, // Reduced mallet movement speed
+    looping: false,
 
     startMatch() {
         this.canvas = document.getElementById('game-canvas');
@@ -16,15 +17,14 @@ const gameEngine = {
         this.canvas.height = CONFIG.CANVAS.HEIGHT;
 
         this.puck = new Puck(this.canvas.width / 2, this.canvas.height / 2);
-        this.player = new Mallet(100, this.canvas.height / 2, "#00ff88");
-        this.ai = new Mallet(this.canvas.width - 100, this.canvas.height / 2, "#ff4444");
+        this.player = new Mallet(150, this.canvas.height / 2, gameUI.selectedTeam.color);
+        this.ai = new Mallet(this.canvas.width - 150, this.canvas.height / 2, gameUI.aiTeam.color);
 
         this.playerScore = 0;
         this.aiScore = 0;
         this.updateHUD();
         this.setupInput();
         
-        // Use a flag to avoid multiple listeners
         if (!this.looping) {
             this.looping = true;
             this.loop();
@@ -32,12 +32,21 @@ const gameEngine = {
     },
 
     setupInput() {
+        // Keyboard only - removing mouse/touch move listeners
         window.onkeydown = (e) => this.keys[e.code] = true;
         window.onkeyup = (e) => this.keys[e.code] = false;
+        
+        // Prevent default scrolling for game keys
+        window.addEventListener("keydown", (e) => {
+            if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight","KeyW","KeyA","KeyS","KeyD"].indexOf(e.code) > -1) {
+                e.preventDefault();
+            }
+        }, false);
     },
 
     updateHUD() {
-        document.getElementById('player-info').querySelector('.team-name').innerText = gameUI.selectedTeam.toUpperCase();
+        document.getElementById('player-info').querySelector('.team-name').innerText = gameUI.selectedTeam.name.toUpperCase();
+        document.getElementById('ai-info').querySelector('.score').nextElementSibling.innerText = gameUI.aiTeam.name.toUpperCase();
         document.getElementById('match-phase').innerText = CONFIG.PHASES[gameUI.currentPhaseIndex];
         gameUI.updateScore(this.playerScore, this.aiScore);
     },
@@ -66,7 +75,6 @@ const gameEngine = {
         let vx = 0;
         let vy = 0;
 
-        // Move Player (WASD or Arrows)
         if (this.keys['KeyW'] || this.keys['ArrowUp']) vy -= this.playerSpeed;
         if (this.keys['KeyS'] || this.keys['ArrowDown']) vy += this.playerSpeed;
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) vx -= this.playerSpeed;
@@ -99,9 +107,9 @@ const gameEngine = {
 
     resetPositions() {
         this.puck.reset();
-        this.player.x = 100;
+        this.player.x = 150;
         this.player.y = this.canvas.height / 2;
-        this.ai.x = this.canvas.width - 100;
+        this.ai.x = this.canvas.width - 150;
         this.ai.y = this.canvas.height / 2;
     },
 
@@ -113,6 +121,9 @@ const gameEngine = {
                 setTimeout(() => location.reload(), 5000);
             } else {
                 gameUI.showOverlay("VITÓRIA!", "var(--primary)", 3000);
+                // Next AI team
+                let availableClubs = CONFIG.CLUBS.filter(c => c.name !== gameUI.selectedTeam.name);
+                gameUI.aiTeam = availableClubs[Math.floor(Math.random() * availableClubs.length)];
                 setTimeout(() => this.startMatch(), 3000);
             }
         } else {
@@ -124,32 +135,27 @@ const gameEngine = {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Field markings (Horizontal)
         this.ctx.strokeStyle = "rgba(255,255,255,0.2)";
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 3;
         
-        // Center line
         this.ctx.beginPath();
         this.ctx.moveTo(this.canvas.width / 2, 0);
         this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
         this.ctx.stroke();
 
-        // Center circle
         this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 80, 0, Math.PI * 2);
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 100, 0, Math.PI * 2);
         this.ctx.stroke();
 
-        // Goal Areas at top/bottom of the side walls
         const gh = CONFIG.PHYSICS.GOAL_HEIGHT;
         const gy = (this.canvas.height - gh) / 2;
         
-        this.ctx.strokeStyle = "#00ff88"; // Player side goal (but target is right)
+        this.ctx.strokeStyle = gameUI.selectedTeam.color; 
         this.ctx.strokeRect(-10, gy, 20, gh);
         
-        this.ctx.strokeStyle = "#ff4444"; // AI side goal
+        this.ctx.strokeStyle = gameUI.aiTeam.color;
         this.ctx.strokeRect(this.canvas.width - 10, gy, 20, gh);
 
-        // Draw entities
         this.puck.draw(this.ctx);
         this.player.draw(this.ctx);
         this.ai.draw(this.ctx);

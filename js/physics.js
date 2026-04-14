@@ -14,9 +14,9 @@ const Physics = {
             puck.x = mallet.x + minDistance * cos;
             puck.y = mallet.y + minDistance * sin;
 
-            // v3.0 Restitution (0.7) + combined velocity
-            puck.vx = (cos * 10 + mallet.vx) * CONFIG.PHYSICS.RESTITUTION;
-            puck.vy = (sin * 10 + mallet.vy) * CONFIG.PHYSICS.RESTITUTION;
+            // v3.1 Softened Restitution
+            puck.vx = (cos * 6 + mallet.vx * 0.4) * CONFIG.PHYSICS.RESTITUTION;
+            puck.vy = (sin * 6 + mallet.vy * 0.4) * CONFIG.PHYSICS.RESTITUTION;
             
             return true;
         }
@@ -57,11 +57,11 @@ const Physics = {
 
     clampMallet(mallet, width, height, isPlayer) {
         if (isPlayer) {
-            // Player restricted to Left half (0 to 380)
+            // Player restricted to Left half (0 to 480)
             if (mallet.x < mallet.radius) mallet.x = mallet.radius;
             if (mallet.x > CONFIG.PHYSICS.PLAYER_X_LIMIT - mallet.radius) mallet.x = CONFIG.PHYSICS.PLAYER_X_LIMIT - mallet.radius;
         } else {
-            // AI restricted to Right half (420 to 800)
+            // AI restricted to Right half (520 to 1000)
             if (mallet.x < width / 2 + 20 + mallet.radius) mallet.x = width / 2 + 20 + mallet.radius;
             if (mallet.x > width - mallet.radius) mallet.x = width - mallet.radius;
         }
