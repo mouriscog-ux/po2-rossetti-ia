@@ -14,9 +14,13 @@ const Physics = {
             puck.x = mallet.x + minDistance * cos;
             puck.y = mallet.y + minDistance * sin;
 
-            // v3.1 Softened Restitution
-            puck.vx = (cos * 6 + mallet.vx * 0.4) * CONFIG.PHYSICS.RESTITUTION;
-            puck.vy = (sin * 6 + mallet.vy * 0.4) * CONFIG.PHYSICS.RESTITUTION;
+            // v3.6 Dynamic Impulse Physics
+            // The faster the mallet moves, the greater the puck velocity boost.
+            const malletSpeed = Math.sqrt(mallet.vx * mallet.vx + mallet.vy * mallet.vy);
+            const impulseMultiplier = 1 + (malletSpeed / 10); // Scale up based on swing
+            
+            puck.vx = (cos * 15 * impulseMultiplier + mallet.vx * 0.8) * CONFIG.PHYSICS.RESTITUTION;
+            puck.vy = (sin * 15 * impulseMultiplier + mallet.vy * 0.8) * CONFIG.PHYSICS.RESTITUTION;
             
             return true;
         }

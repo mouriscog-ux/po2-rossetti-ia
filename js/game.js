@@ -135,27 +135,71 @@ const gameEngine = {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        this.ctx.strokeStyle = "rgba(255,255,255,0.2)";
-        this.ctx.lineWidth = 3;
+        // Soccer Field Background (Grass)
+        this.ctx.fillStyle = "#1e4d2b";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
+        // Grass Pattern (Stripes)
+        this.ctx.fillStyle = "#245a32";
+        for (let i = 0; i < 10; i++) {
+            if (i % 2 === 0) {
+                this.ctx.fillRect(i * (this.canvas.width / 10), 0, this.canvas.width / 10, this.canvas.height);
+            }
+        }
+
+        // Field markings
+        this.ctx.strokeStyle = "rgba(255,255,255,0.6)";
+        this.ctx.lineWidth = 4;
+        
+        // Outer box
+        this.ctx.strokeRect(10, 10, this.canvas.width - 20, this.canvas.height - 20);
+
+        // Center line
         this.ctx.beginPath();
-        this.ctx.moveTo(this.canvas.width / 2, 0);
-        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
+        this.ctx.moveTo(this.canvas.width / 2, 10);
+        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height - 10);
         this.ctx.stroke();
 
+        // Center circle & spot
         this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 100, 0, Math.PI * 2);
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 80, 0, Math.PI * 2);
         this.ctx.stroke();
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 5, 0, Math.PI * 2);
+        this.ctx.fillStyle = "rgba(255,255,255,0.6)";
+        this.ctx.fill();
 
+        // Penalty Areas (Large Boxes)
+        const areaH = 400;
+        const areaW = 150;
+        const areaY = (this.canvas.height - areaH) / 2;
+        this.ctx.strokeRect(10, areaY, areaW, areaH); // Left
+        this.ctx.strokeRect(this.canvas.width - areaW - 10, areaY, areaW, areaH); // Right
+
+        // Goal Areas (Small Boxes)
         const gh = CONFIG.PHYSICS.GOAL_HEIGHT;
         const gy = (this.canvas.height - gh) / 2;
-        
-        this.ctx.strokeStyle = gameUI.selectedTeam.color; 
-        this.ctx.strokeRect(-10, gy, 20, gh);
-        
-        this.ctx.strokeStyle = gameUI.aiTeam.color;
-        this.ctx.strokeRect(this.canvas.width - 10, gy, 20, gh);
+        this.ctx.strokeRect(10, gy, 50, gh); // Left
+        this.ctx.strokeRect(this.canvas.width - 60, gy, 50, gh); // Right
 
+        // Penalty Spots
+        this.ctx.beginPath();
+        this.ctx.arc(120, this.canvas.height / 2, 5, 0, Math.PI * 2);
+        this.ctx.fillStyle = "rgba(255,255,255,0.6)"; 
+        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width - 120, this.canvas.height / 2, 5, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Draw goals (Real colored nets)
+        this.ctx.lineWidth = 8;
+        this.ctx.strokeStyle = gameUI.selectedTeam.primary; 
+        this.ctx.strokeRect(-5, gy, 15, gh);
+        
+        this.ctx.strokeStyle = gameUI.aiTeam.primary;
+        this.ctx.strokeRect(this.canvas.width - 10, gy, 15, gh);
+
+        // Draw entities
         this.puck.draw(this.ctx);
         this.player.draw(this.ctx);
         this.ai.draw(this.ctx);
