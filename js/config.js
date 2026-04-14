@@ -33,7 +33,7 @@ const CONFIG = {
     PHYSICS: {
         DAMPING: 0.99,
         RESTITUTION: 0.8,
-        MAX_SPEED: 25, // Increased to ~1.7x (approx 25 from 15)
+        MAX_SPEED: 38, // 2.5x speed requested
         PUCK_RADIUS: 25,
         MALLET_RADIUS: 45,
         GOAL_HEIGHT: 250,
