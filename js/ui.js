@@ -10,11 +10,11 @@ const gameUI = {
 
     populateTeams() {
         const grid = document.getElementById('team-grid');
-        CONFIG.CLUBS.forEach(club => {
+        CONFIG.CLUBS.forEach((teamName, index) => {
             const card = document.createElement('div');
             card.className = 'team-card';
-            card.innerHTML = `<strong>${club.id.toString().padStart(2, '0')}</strong><br>${club.name}`;
-            card.onclick = () => this.selectTeam(club, card);
+            card.innerHTML = `<strong>${(index + 1).toString().padStart(2, '0')}</strong><br>${teamName}`;
+            card.onclick = () => this.selectTeam(teamName, card);
             grid.appendChild(card);
         });
     },
@@ -29,8 +29,8 @@ const gameUI = {
         });
     },
 
-    selectTeam(team, element) {
-        this.selectedTeam = team;
+    selectTeam(teamName, element) {
+        this.selectedTeam = teamName;
         document.querySelectorAll('.team-card').forEach(c => c.classList.remove('selected'));
         element.classList.add('selected');
     },

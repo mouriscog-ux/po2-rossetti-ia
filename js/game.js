@@ -6,65 +6,50 @@ const gameEngine = {
     ai: null,
     playerScore: 0,
     aiScore: 0,
-    isPaused: false,
-    mouse: { x: 0, y: 0 },
+    keys: {},
+    playerSpeed: 7,
 
     startMatch() {
         this.canvas = document.getElementById('game-canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.canvas.width = 400;
-        this.canvas.height = 700;
+        this.canvas.width = CONFIG.CANVAS.WIDTH;
+        this.canvas.height = CONFIG.CANVAS.HEIGHT;
 
         this.puck = new Puck(this.canvas.width / 2, this.canvas.height / 2);
-        this.player = new Mallet(this.canvas.width / 2, this.canvas.height - 100, gameUI.selectedTeam.color);
-        this.ai = new Mallet(this.canvas.width / 2, 100, "#ff4444", true);
+        this.player = new Mallet(100, this.canvas.height / 2, "#00ff88");
+        this.ai = new Mallet(this.canvas.width - 100, this.canvas.height / 2, "#ff4444");
 
         this.playerScore = 0;
         this.aiScore = 0;
         this.updateHUD();
-
         this.setupInput();
-        this.loop();
+        
+        // Use a flag to avoid multiple listeners
+        if (!this.looping) {
+            this.looping = true;
+            this.loop();
+        }
     },
 
     setupInput() {
-        const rect = this.canvas.getBoundingClientRect();
-        
-        const updatePos = (e) => {
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            const nextX = clientX - rect.left;
-            const nextY = clientY - rect.top;
-
-            // Calculate mallet velocity for hit physics
-            this.player.vx = nextX - this.player.x;
-            this.player.vy = nextY - this.player.y;
-            
-            this.player.x = nextX;
-            this.player.y = nextY;
-            Physics.clampMallet(this.player, this.canvas.width, this.canvas.height, true);
-        };
-
-        window.addEventListener('mousemove', updatePos);
-        window.addEventListener('touchmove', updatePos, { passive: false });
+        window.onkeydown = (e) => this.keys[e.code] = true;
+        window.onkeyup = (e) => this.keys[e.code] = false;
     },
 
     updateHUD() {
-        document.getElementById('player-info').querySelector('.team-name').innerText = gameUI.selectedTeam.name.toUpperCase();
+        document.getElementById('player-info').querySelector('.team-name').innerText = gameUI.selectedTeam.toUpperCase();
         document.getElementById('match-phase').innerText = CONFIG.PHASES[gameUI.currentPhaseIndex];
         gameUI.updateScore(this.playerScore, this.aiScore);
     },
 
     loop() {
-        if (this.isPaused) return;
-
         this.update();
         this.draw();
         requestAnimationFrame(() => this.loop());
     },
 
     update() {
+        this.handlePlayerMovement();
         this.puck.update();
         AI.update(this.ai, this.puck, gameUI.difficulty, this.canvas.width, this.canvas.height);
         
@@ -75,6 +60,24 @@ const gameEngine = {
         if (goalResult) {
             this.handleGoal(goalResult);
         }
+    },
+
+    handlePlayerMovement() {
+        let vx = 0;
+        let vy = 0;
+
+        // Move Player (WASD or Arrows)
+        if (this.keys['KeyW'] || this.keys['ArrowUp']) vy -= this.playerSpeed;
+        if (this.keys['KeyS'] || this.keys['ArrowDown']) vy += this.playerSpeed;
+        if (this.keys['KeyA'] || this.keys['ArrowLeft']) vx -= this.playerSpeed;
+        if (this.keys['KeyD'] || this.keys['ArrowRight']) vx += this.playerSpeed;
+
+        this.player.vx = vx;
+        this.player.vy = vy;
+        this.player.x += vx;
+        this.player.y += vy;
+
+        Physics.clampMallet(this.player, this.canvas.width, this.canvas.height, true);
     },
 
     handleGoal(result) {
@@ -96,10 +99,10 @@ const gameEngine = {
 
     resetPositions() {
         this.puck.reset();
-        this.player.x = this.canvas.width / 2;
-        this.player.y = this.canvas.height - 100;
-        this.ai.x = this.canvas.width / 2;
-        this.ai.y = 100;
+        this.player.x = 100;
+        this.player.y = this.canvas.height / 2;
+        this.ai.x = this.canvas.width - 100;
+        this.ai.y = this.canvas.height / 2;
     },
 
     checkMatchEnd() {
@@ -110,7 +113,7 @@ const gameEngine = {
                 setTimeout(() => location.reload(), 5000);
             } else {
                 gameUI.showOverlay("VITÓRIA!", "var(--primary)", 3000);
-                setTimeout(() => this.startMatch(), 3000); // Next round
+                setTimeout(() => this.startMatch(), 3000);
             }
         } else {
             gameUI.showOverlay("ELIMINADO!", "var(--danger)", 5000);
@@ -121,27 +124,30 @@ const gameEngine = {
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Field markings
+        // Field markings (Horizontal)
         this.ctx.strokeStyle = "rgba(255,255,255,0.2)";
         this.ctx.lineWidth = 2;
         
         // Center line
         this.ctx.beginPath();
-        this.ctx.moveTo(0, this.canvas.height / 2);
-        this.ctx.lineTo(this.canvas.width, this.canvas.height / 2);
+        this.ctx.moveTo(this.canvas.width / 2, 0);
+        this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
         this.ctx.stroke();
 
         // Center circle
         this.ctx.beginPath();
-        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 60, 0, Math.PI * 2);
+        this.ctx.arc(this.canvas.width / 2, this.canvas.height / 2, 80, 0, Math.PI * 2);
         this.ctx.stroke();
 
-        // Goals
-        const gw = CONFIG.PHYSICS.GOAL_WIDTH;
-        this.ctx.strokeStyle = "#00ff88";
-        this.ctx.lineWidth = 4;
-        this.ctx.strokeRect((this.canvas.width - gw) / 2, -10, gw, 20);
-        this.ctx.strokeRect((this.canvas.width - gw) / 2, this.canvas.height - 10, gw, 20);
+        // Goal Areas at top/bottom of the side walls
+        const gh = CONFIG.PHYSICS.GOAL_HEIGHT;
+        const gy = (this.canvas.height - gh) / 2;
+        
+        this.ctx.strokeStyle = "#00ff88"; // Player side goal (but target is right)
+        this.ctx.strokeRect(-10, gy, 20, gh);
+        
+        this.ctx.strokeStyle = "#ff4444"; // AI side goal
+        this.ctx.strokeRect(this.canvas.width - 10, gy, 20, gh);
 
         // Draw entities
         this.puck.draw(this.ctx);
