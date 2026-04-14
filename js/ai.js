@@ -5,8 +5,11 @@ const AI = {
         let targetY = puck.y;
         let targetX = aiMallet.x;
 
-        // Level-based logic
-        if (difficulty === 'easy') {
+        // v3.4: If puck is at center (reset or start), AI goes to center of its side
+        if (Math.abs(puck.x - width / 2) < 5 && Math.abs(puck.y - height / 2) < 5) {
+            targetX = width - 150;
+            targetY = height / 2;
+        } else if (difficulty === 'easy') {
             // Only moves on Y to block
             targetX = width - 100;
         } else if (difficulty === 'medium') {
