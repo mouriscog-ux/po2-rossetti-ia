@@ -31,12 +31,12 @@ const CONFIG = {
         hard: { speed: 6, reaction: 1.0, aggressive: true, prediction: true }
     },
     PHYSICS: {
-        DAMPING: 0.985, 
-        RESTITUTION: 0.5, // Even softer hit
-        MAX_SPEED: 8, // Reduced speed
+        DAMPING: 0.99, // Less friction for faster puck
+        RESTITUTION: 0.8, // More punchy impact
+        MAX_SPEED: 15, // Adjusted from 1,5 to 15 for 'normal' speed
         PUCK_RADIUS: 25,
         MALLET_RADIUS: 45,
-        GOAL_HEIGHT: 250, // Slightly larger goal for balance
+        GOAL_HEIGHT: 250,
         PLAYER_X_LIMIT: 480
     },
     PHASES: ["OITAVAS DE FINAL", "QUARTAS DE FINAL", "SEMI-FINAL", "GRANDE FINAL"]

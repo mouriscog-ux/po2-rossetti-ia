@@ -7,7 +7,7 @@ const gameEngine = {
     playerScore: 0,
     aiScore: 0,
     keys: {},
-    playerSpeed: 6, // Reduced mallet movement speed
+    playerSpeed: 10, // Restored to normal/fast speed
     looping: false,
 
     startMatch() {
