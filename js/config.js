@@ -26,14 +26,15 @@ const CONFIG = {
         { name: "Mirassol", primary: "#ffdd00", secondary: "#00913d" }
     ],
     DIFFICULTIES: {
-        easy: { speed: 6, reaction: 0.1, aggressive: false },
-        medium: { speed: 10, reaction: 0.5, aggressive: true },
-        hard: { speed: 10, reaction: 1.0, aggressive: true, prediction: true }
+        easy: { speed: 3, reaction: 0.1, aggressive: false },
+        medium: { speed: 4, reaction: 0.5, aggressive: true },
+        hard: { speed: 4, reaction: 1.0, aggressive: true, prediction: true }
     },
     PHYSICS: {
-        DAMPING: 0.99,
-        RESTITUTION: 1.0, // Increased for power
-        MAX_SPEED: 60, // 4x speed limit
+        CRUISE_SPEED: 4,
+        MAX_SPEED: 5,
+        DAMPING: 0.98, // 2% loss per frame
+        RESTITUTION: 1.0, 
         PUCK_RADIUS: 25,
         MALLET_RADIUS: 45,
         GOAL_HEIGHT: 250,

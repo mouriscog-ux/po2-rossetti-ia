@@ -7,7 +7,7 @@ const gameEngine = {
     playerScore: 0,
     aiScore: 0,
     keys: {},
-    playerSpeed: 10, // Restored to normal/fast speed
+    playerSpeed: 4, // Alinhado com V_base (4px/frame)
     looping: false,
 
     startMatch() {
